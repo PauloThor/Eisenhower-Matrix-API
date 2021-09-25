@@ -1,6 +1,5 @@
 from flask import Blueprint, request, current_app, jsonify
 from app.models.categories_model import CategoriesModel
-from datetime import datetime, timedelta
 from sqlalchemy.exc import IntegrityError
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.orm.exc import UnmappedInstanceError
@@ -59,8 +58,9 @@ def update(category_id):
     except AttributeError:
         return {"msg": "category not found!"}, 404
     
-    except IntegrityError:
-        return {"msg": "category already exists!"}, 409
+    except IntegrityError as e:
+        if type(e.orig) == UniqueViolation:
+            return {"msg": "category already exists!"}, 409
 
 
 
@@ -79,8 +79,5 @@ def delete(category_id):
 
     except UnmappedInstanceError:
         return {"msg": "category not found!"}, 404
-    
-    except IntegrityError:
-        return {"msg": "category already exists!"}, 409
 
              

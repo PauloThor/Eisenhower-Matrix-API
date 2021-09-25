@@ -1,10 +1,8 @@
 from flask import Blueprint, request, current_app, jsonify
 from app.models.categories_model import CategoriesModel
-from app.models.eisenhowers_model import EisenhowersModel
 from app.models.tasks_model import TasksModel
 from app.controllers.eisenhowers_controller import Eisenhower
 from app.controllers.tasks_controllers import Task
-from datetime import datetime, timedelta
 from app.exc.task_errors import InvalidOptions
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from psycopg2.errors import UniqueViolation
@@ -76,7 +74,6 @@ def update_task(id: int):
             return {'msg': "a task with that name already exists!"}, 409
 
     except AttributeError as e:
-        print(e)
         return {'msg': "category not found!"}, 404
     
     except InvalidRequestError as e:
